@@ -8,6 +8,7 @@ var expression =a[2];
 var value= a[3];
 var songName='';
 var songNameArray=[];
+var logInput='';
 
 //getting twitter keys from key.js
 var client = new Twitter({
@@ -28,8 +29,11 @@ function myTweets(){
 		  	console.log("------my tweets------");
 		  	tweets.forEach(function(item,index){
 		  		console.log("tweet"+index+": "+tweets[index].text);
+		  		logInput += tweets[index].text+'\n';
 
 		  	})
+		  	write(logInput);
+
 	  	}
 	});
 }
@@ -49,7 +53,13 @@ function songDetails(songName){
             		console.log("Artist Name: "+trackArray[index].artists[0].name);
             		console.log("Preview Url: "+trackArray[index].preview_url);
             		console.log("-----------------------------------");
-                   });                   
+            		logInput += "Album Name: "+trackArray[index].album.name+'\n';
+            		logInput += "Track Name: "+ trackArray[index].name+'\n';
+            		logInput += "Artist Name: "+trackArray[index].artists[0].name+'\n';
+            		logInput += "Preview Url: "+trackArray[index].preview_url+'\n';
+
+                   });    
+                   write(logInput);             
              }	        
     });	        
  	
@@ -89,9 +99,21 @@ function movieInfo(movieName){
 			console.log("Plot : "+JSON.parse(body).Plot); 
 			console.log("Actors : "+JSON.parse(body).Actors); 
 			console.log("Rotten Tomatoes Rating : "+JSON.parse(body).tomatoRating); 
-			console.log("Rotten Tomatoes URL : "+JSON.parse(body).tomatoURL); // Show the HTML for the Google homepage. 
+			console.log("Rotten Tomatoes URL : "+JSON.parse(body).tomatoURL); 
+			logInput += "Title : "+JSON.parse(body).Title+'\n';
+			logInput += "Year : "+JSON.parse(body).Year+'\n';
+			logInput += "IMDB Rating : "+JSON.parse(body).imdbRating+'\n';
+			logInput += "Country where the movie was produced : "+JSON.parse(body).Country+'\n';
+			logInput += "Language : "+JSON.parse(body).Language+'\n';
+			logInput += "Plot : "+JSON.parse(body).Plot+'\n';
+			logInput += "Actors : "+JSON.parse(body).Actors+'\n';
+			logInput += "Actors : "+JSON.parse(body).Actors+'\n';
+			logInput += "Rotten Tomatoes Rating : "+JSON.parse(body).tomatoRating+'\n';
+			logInput += "Rotten Tomatoes URL : "+JSON.parse(body).tomatoURL+'\n';
 		}
+		write(logInput);
 	});
+	
 }
 
 //function to get movie details from IMDB node package
@@ -149,8 +171,14 @@ function sDetails(sName){
         		console.log("Artist Name: "+trackArray[index].artists[0].name);
         		console.log("Preview Url: "+trackArray[index].preview_url);
         		console.log("-----------------------------------");
+        		logInput += "Album Name: "+trackArray[index].album.name+'\n';
+        		logInput += "Track Name: "+ trackArray[index].name+'\n';
+             	logInput += "Artist Name: "+trackArray[index].artists[0].name+'\n';
+        		logInput += "Preview Url: "+trackArray[index].preview_url+'\n';
+
+
             });
-                    
+             write(logInput) ; 
                 
         }
 
@@ -169,9 +197,22 @@ function usageNotes() {
 	console.log("node liri.js help ");
 }
 
+// appending data into the text file
+function write(item){
+fs.appendFile('log.txt',"\n"+item,function(err){
+	if(err){
+		return console.log(err);
+
+	}else{
+		console.log("log.txt file created");
+	}
+})
+}
+
 switch(expression){
 	case "my-tweets":
 			myTweets();
+			console.log("logInput"+logInput);
 			break;
 	case "spotify-this-song":
 			spotifyMySongs(value);
